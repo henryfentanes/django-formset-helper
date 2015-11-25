@@ -1,0 +1,66 @@
+{% load bootstrap %}
+{% load staticfiles %}
+{% load fieldset_inline_helper %}
+<fieldset id="{{form_name}}_fieldset">
+    <div id="{{form_name}}_form">
+        <div class="row">
+            {% for field in form_create %}
+                {% if field.label not in exclude %}
+                    <div class="col-md-2">
+                        {{ field|bootstrap }}
+                    </div>
+                {% else %}
+                    {{field.as_hidden}}
+                {% endif %}
+            {% endfor %}
+        </div>
+    </div>
+    <a href="#" id="add_{{form_name}}" class="btn btn-info add-item">Add</a>
+    {% with inline as formset %}
+    {{ formset.management_form }}
+    <table id="{{form_name}}_table" class="table table-striped table-bordered table-hover">
+        <thead>
+            <tr>
+                {% for header in table_header %}
+                    <th>{{header}}</th>
+                {% endfor %}
+                <th>Action</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for form in formset.forms %}
+            <tr class="form-row">
+                {% for field in form %}
+                    {% if field.label not in exclude  %}
+                        <td>{{form|selected_choice:field.name}} {{field.as_hidden}} </td>
+                    {% endif %}
+                {% endfor %}
+                <td class="action"> <!-- Add the excluded fields in the last column along with the action buttons -->
+                    <button class="btn btn-info edit-item edit-dias_desconto" type="button"><i class="fa fa-edit"></i></button>
+                    <button class="btn btn-danger delete-item" type="button"><i class="fa fa-trash-o"></i></button>
+                    {% for field in form %}
+                        {% if field.label in exclude  %}
+                            {{field.as_hidden}}
+                        {% endif %}
+                    {% endfor %}
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    {% endwith %}
+
+    <script src="{% static "django_formset_helper/js/jquery-2.1.0.min.js" %}"></script>
+    <script src="{% static "django_formset_helper/js/django_formset_template_helper.js" %}"></script>
+    <script>
+    $(document).ready( function() {
+        // Botão de adicionar do form dias_desconto
+        var nomeDoForm = "{{form_name}}";
+        $("#add_"+ nomeDoForm).on("click", function(event){
+            add_line(nomeDoForm, {{required|safe}}, "{{form_prefix|safe}}");
+        });
+        //ao carregar a página, exibir tabela vazia.
+        handle_empty_table(nomeDoForm);
+    });
+    </script>
+</fieldset>
