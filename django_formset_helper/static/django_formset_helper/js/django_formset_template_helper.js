@@ -66,6 +66,7 @@
                 _editing_id = editInputs[0].selector.split('-').slice(-2,-1);
                 _editing_row = row;
                 row.addClass("info");
+
         });
 
         function get_form_inputs_names(formId, formPrefix){
@@ -115,15 +116,14 @@
                 } else {
                   button = true;
                   $editInput = input;
-
                 }
                 if(button == false){
                   name = $editInput[0].name.split('-')[$editInput[0].name.split('-').length-1];
-                }
-                if($.inArray(name, formInputsNames) >= 0){
-                  input_list.push($editInput);
-                } else {
-                  _edit_extras.push($editInput);
+                  if($.inArray(name, formInputsNames) >= 0){
+                    input_list.push($editInput);
+                  } else {
+                    _edit_extras.push($editInput);
+                  }
                 }
             });
 
@@ -176,11 +176,11 @@
                 });
 
                 $tr.append($('<td>').addClass('action')
+                    .append($edit_button_template.clone())
+                    .append($delete_button_template.clone())
                     .append(render_field('id', '', form_id))
                     .append(render_field('DELETE', '', form_id))
-                    .append($edit_button_template.clone())
-                    // .append($edit_button_template.clone().addClass('edit-'+form_id))
-                    .append($delete_button_template.clone()));
+                    );
 
                 $table = $('#'+form_id+'_table').find('tbody')
                 $table.append($tr);
@@ -213,17 +213,18 @@
                         }
 
                         col = editInputs[i].parent();
+
                         col.text(texto);
                         col.append(editInputs[i]);
                         i++;
                       }; // end if i<= length
+
+                      action_col = row.find('.action');
+
                       extras.each(function(){
-                        col.append($(this));
+                        action_col.append($(this));
                       });
-                    console.log(row.closest('.edit-item'));
                     }); // end fieldset.each
-
-
 
                     _is_editing = false;
                     _editing_id = null;
