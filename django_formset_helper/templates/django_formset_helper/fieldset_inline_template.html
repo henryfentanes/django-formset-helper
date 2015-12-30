@@ -36,7 +36,7 @@
                     {% endif %}
                 {% endfor %}
                 <td class="action"> <!-- Add the excluded fields in the last column along with the action buttons -->
-                    <button class="btn btn-info edit-item edit-dias_desconto" type="button"><i class="fa fa-edit"></i></button>
+                    <button class="btn btn-info edit-item" type="button"><i class="fa fa-edit"></i></button>
                     <button class="btn btn-danger delete-item" type="button"><i class="fa fa-trash-o"></i></button>
                     {% for field in form %}
                         {% if field.label in exclude  %}
